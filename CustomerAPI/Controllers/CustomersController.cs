@@ -39,7 +39,11 @@ namespace CustomerAPI.Controllers
             if (customer == null)
                 return BadRequest();
 
-            //if(customer.FirstName == null || customer.LastName == null)
+            var existingCustomer = _customerRepository.GetCustomerById(customer.Id);
+            if (existingCustomer != null)
+            {
+                return BadRequest(new { message = "A customer with the same Id already exists." });
+            }
 
             _customerRepository.AddCustomer(customer);
             return CreatedAtAction(nameof(GetCustomer), new { id = customer.Id }, customer);
